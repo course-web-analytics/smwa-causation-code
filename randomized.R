@@ -58,7 +58,6 @@ ggdag(dag,
 
 # --- Reverse causality ---#
 
-```{r, cache = TRUE, out.width="60%", fig.align='center'}
 dag <- dagify(x ~ y,
               exposure = "x",
               outcome = "y"
@@ -71,7 +70,7 @@ ggdag(dag,
                  arrow_directed = grid::arrow(length = grid::unit(14, "pt"), type = "closed"),
   ) + 
   theme_dag_blank()
-```
+
 
 # --- Load and Inspect Charity Data --- #
 charity <- 
