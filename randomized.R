@@ -56,6 +56,23 @@ ggdag(dag,
                    ) + 
     theme_dag_blank()
 
+# --- Reverse causality ---#
+
+```{r, cache = TRUE, out.width="60%", fig.align='center'}
+dag <- dagify(x ~ y,
+              exposure = "x",
+              outcome = "y"
+)
+ggdag(dag, 
+      layout = "circle",
+      node_size = 20,
+      text_size = 10) +
+  geom_dag_edges(edge_width = 2, 
+                 arrow_directed = grid::arrow(length = grid::unit(14, "pt"), type = "closed"),
+  ) + 
+  theme_dag_blank()
+```
+
 # --- Load and Inspect Charity Data --- #
 charity <- 
     read_csv("data/exp2data.csv") %>%
