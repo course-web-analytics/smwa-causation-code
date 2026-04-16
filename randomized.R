@@ -84,46 +84,53 @@ charity <-
 head(charity, n = 5)
 
 # --- Plot Clickthrough --- #
-YOURCODE %>% 
+charity %>%
+    group_by(condition) %>%
+    summarize(click = mean(clickthrough),
+              std_err = sd(clickthrough) / sqrt(n())
+              ) %>%
     ggplot() +
-    geom_bar(aes(x = YOURCODE, 
-                 y = YOURCODE
-                 ), 
-             stat = "identity", 
-             fill = "skyblue", 
+    geom_bar(aes(x = condition,
+                 y = click
+                 ),
+             stat = "identity",
+             fill = "skyblue",
              alpha = 0.7) +
-    geom_errorbar(aes(x = condition, 
-                      ymin = YOURCODE, 
-                      ymax = YOURCODE), 
-                  width = 0.4, 
-                  colour = "orange", 
-                  alpha = 0.9, 
+    geom_errorbar(aes(x = condition,
+                      ymin = click - std_err,
+                      ymax = click + std_err),
+                  width = 0.4,
+                  colour = "orange",
+                  alpha = 0.9,
                   size = 1.5) +
-    scale_y_continuous(limits=c(.13,.155), 
+    scale_y_continuous(limits=c(.13,.155),
                        oob = scales::squish
                        ) +
-    theme_bw() + 
+    theme_bw() +
     ggtitle("Clickthrough Rate") +
     theme(text = element_text(size=28),
           plot.title = element_text(hjust = 0.5))
 
 # --- Plot Recruitment --- #
 
-YOURCODE %>%
+charity %>%
+    group_by(condition) %>%
+    summarize(recruit = mean(recruited),
+              std_err = sd(recruited) / sqrt(n())
+              ) %>%
     ggplot() +
-    ggplot() +
-    geom_bar(aes(x = YOURCODE, 
-                 y = YOURCODE
-    ), 
-    stat = "identity", 
-    fill = "skyblue", 
-    alpha = 0.7) +
-    geom_errorbar(aes(x = condition, 
-                      ymin = YOURCODE, 
-                      ymax = YOURCODE), 
-                  width = 0.4, 
-                  colour = "orange", 
-                  alpha = 0.9, 
+    geom_bar(aes(x = condition,
+                 y = recruit
+                 ),
+             stat = "identity",
+             fill = "skyblue",
+             alpha = 0.7) +
+    geom_errorbar(aes(x = condition,
+                      ymin = recruit - std_err,
+                      ymax = recruit + std_err),
+                  width = 0.4,
+                  colour = "orange",
+                  alpha = 0.9,
                   size = 1.5) +
     scale_y_continuous(limits=c(.025,.035), oob = scales::squish) +
     theme_bw() +
@@ -131,12 +138,38 @@ YOURCODE %>%
     theme(text = element_text(size=28),
           plot.title = element_text(hjust = 0.5))
 
-# --- Statistical Tests --- # 
-# YOUR CODE HERE
+# --- Computing Proportions by Treatment --- #
+charity %>%
+    group_by(condition) %>%
+    summarize(click = mean(clickthrough),
+              recruit = mean(recruited))
 
+# --- Statistical Tests --- #
+# `prop_test` from {infer} requires logical outcomes
+charity <-
+    charity %>%
+    mutate(clickthrough = as.logical(clickthrough),
+           recruited    = as.logical(recruited)
+    )
 
-# --- Regression Based Inference --- # 
-# YOUR CODE HERE
+# Test for clickthrough
+prop_test(charity,
+          clickthrough ~ condition
+          )
+
+# Test for recruitment
+prop_test(charity,
+          recruited ~ condition
+          )
+
+# --- Regression Based Inference --- #
+# clickthrough_i = beta_0 + beta_1 * Condition_i + e_i
+clicks <- lm(clickthrough ~ condition, data = charity)
+tidy(clicks)
+
+# recruit_i = beta_0 + beta_1 * Condition_i + e_i
+recruit <- lm(recruited ~ condition, data = charity)
+tidy(recruit)
 
 
 
