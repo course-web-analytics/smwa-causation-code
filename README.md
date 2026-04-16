@@ -1,8 +1,3 @@
----
-title: "README"
-output: html_document
----
-
 # Social Media and Web Analytics: Causation and Randomization
 
 [![lifecycle](https://img.shields.io/badge/lifecycle-stable-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
