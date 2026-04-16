@@ -22,7 +22,7 @@ Clone a copy of this repository using Git.
 To clone a copy of this repository to your own PC:
 
 ```{bash, eval = FALSE}
-git clone git@github.com:course-web-analytics/smwa-designing-research-code.git
+git clone git@github.com:course-web-analytics/smwa-causation-code.git
 ```
 
 ### Installing required packages
